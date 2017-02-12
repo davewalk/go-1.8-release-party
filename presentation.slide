@@ -97,13 +97,15 @@ The overhead of deferred function calls has been reduced by about half.
 
 The overhead of calls from Go into C has been reduced by about half.
 
-* Ports
+* OSX support 
 
-- Go now supports 32-bit MIPS on Linux for both big-endian (linux/mips) and little-endian machines (linux/mipsle) that implement the MIPS32r1 instruction set with FPU or kernel FPU emulation. Note that many common MIPS-based routers lack an FPU and have firmware that doesn't enable kernel FPU emulation; Go won't run on such machines.
-- On DragonFly BSD, Go now requires DragonFly 4.4.4 or later.
-- On OpenBSD, Go now requires OpenBSD 5.9 or later.
-- The Plan 9 port's networking support is now much more complete and matches the behavior of Unix and Windows with respect to deadlines and cancelation.
 - Go 1.8 now only supports OS X 10.8 or later. This is likely the last Go release to support 10.8. Compiling Go or running binaries on older OS X versions is untested.
+
+* Compiler speed
+
+About a 12-15% improvement compared to Go 1.7
+
+* Tools
 
 * Default GOPATH
 
@@ -115,28 +117,6 @@ When `GOPATH` is not defined, the tool will use:
 [[https://github.com/golang/go/issues/17262][Initial discussion]]
 
 [[https://github.com/golang/go/issues/17271][future possibilities]]
-
-* SSA backend
-
-- All backends updated to use the new SSA form. Old "plan9" style compiler backend deleted.
-- Generates more compact and efficient code
-- Better platform for optimizations
-- Big performance improvements for arm32 (20-30% speed up).
-- For others where SSA already used, 0-10% performance gain
-
-* New parser
-
-The new parser removes many of the package level variables which came along for the ride from the previous YACC based parser. Removing package level globals is a stepping stone to making the compiler more parallel.
-
-This new parser is reportedly considerably faster, but in 1.8 is hamstrung by having to convert between the new style AST and the old version the rest of the compiler expects.
-
-Expect this AST conversion to be removed in Go 1.9.
-
-* Compiler speed
-
-About a 12-15% improvement compared to Go 1.7
-
-* Tools
 
 * Tools
 
