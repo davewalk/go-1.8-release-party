@@ -1,8 +1,12 @@
 Go 1.8 Release Party
-YOUR MEETUP
 16 Feb 2017
+Golang Philly
+Tags: 1.8, release party
 
-YOUR MEETUP
+Dave Walk
+Software Engineer, Sidecar
+@ddw17
+
 
 * License and Materials
 
@@ -16,11 +20,7 @@ You are encouraged to remix, transform, or build upon the material, providing yo
 
 If you have suggestions or corrections to this presentation, please raise [[https://github.com/davecheney/go-1.8-release-party/issues][an issue on the GitHub project]].
 
-* DRAFT PRESENTATION
-
-THIS IS A DRAFT PRESENTATION
-
-IF YOU WOULD LIKE TO CONTRIBUTE TO THIS PRESENTATION PLEASE CONSULT THE [[https://github.com/davecheney/go-1.8-release-party/issues][LIST OF OPEN ISSUES FOR THIS PRESENTATION]]
+Some details also taken from Francesc Campoy's [[https://talks.golang.org/2017/state-of-go.slide#1][The State of Go February 2017 presentation]]
 
 * Go 1.8
 
@@ -30,9 +30,54 @@ Go 1.8 is the 9th release in the Go 1 series. It follows from the previous versi
 
 TODO LINK TO RELEASE NOTES AND BLOG POST ANNOUNCEMENT
 
+* Topics
+- Language Addition and Updates
+- Performance
+- Tools
+- 1.9
+
+* Language
+
+* Struct conversion
+
+When explicitly converting a value from one struct type to another, as of Go 1.8 the tags are ignored.
+
+.code examples/struct_conversion.go
+
+* Struct conversion
+
+Both types still need to have:
+
+- same sequence of fields in the same order
+- corresponding fields with the same type
+
+* Sorting
+Instead of writing `Len()`, `Swap()` and `Less()` functtions, there's a new `sort.Slice()` that just takes a less function
+
+.code examples/new_slice_sort.go
+
+There are also new `slice.SliceTable` and `slice.SliceIsSorted` functions.
+
+*Is* a bit slower than the regular way to sort
+
+* HTTP Shutdown
+New `Shutdown()` method to `http.Server`
+
+: "lame duck mode" - don't serve new requests, but won't die for already established requests
+
+.code examples/server_shutdown.go
+
+.code examples/server_shutdown_examine.go
+
+* Performance
+
 * Performance
 
 As always, the changes are so general and varied that precise statements about performance are difficult to make. Most programs should run a bit faster, due to speedups in the garbage collector and optimizations in the standard library.
+
+[[https://github.com/golang/go/issues/18964][HTTP Regression]]
+
+Lightning talks next month?
 
 * Miscellaneous performance improvements
 
@@ -40,7 +85,9 @@ There have been optimizations to implementations in the `bytes`, `crypto/aes`, `
 
 * Garbage Collector
 
-Garbage collection pauses should be significantly shorter than they were in Go 1.7, usually under 100 microseconds and often as low as 10 microseconds. See the document on eliminating stop-the-world stack re-scanning for details. More work remains for Go 1.9.
+Garbage collection pauses should be significantly shorter than they were in Go 1.7, usually under 100 microseconds and often as low as 10 microseconds. More work remains for Go 1.9.
+
+.link https://github.com/golang/proposal/blob/master/design/17503-eliminate-rescan.md
 
 * Defer
 
@@ -49,12 +96,6 @@ The overhead of deferred function calls has been reduced by about half.
 * Cgo
 
 The overhead of calls from Go into C has been reduced by about half.
-
-* Struct conversion
-
-When explicitly converting a value from one struct type to another, as of Go 1.8 the tags are ignored.
-
-.code examples/struct_conversion.go
 
 * Ports
 
@@ -66,23 +107,24 @@ When explicitly converting a value from one struct type to another, as of Go 1.8
 
 * Default GOPATH
 
-TODO NEEDS LINK TO ISSUE AND DISCUSSION
+When `GOPATH` is not defined, the tool will use:
 
-[[https://github.com/davecheney/go-1.8-release-party/issues/3][TODO NEED EXAMPLE]]
+- `$HOME/go` on Unix
+- `%USERPROFILE%\go` on Windows
 
-TODO NEEDS UPGRADE ADVICE
+[[https://github.com/golang/go/issues/17262][Initial discussion]]
 
-* Compiler changes
+[[https://github.com/golang/go/issues/17271][future possibilities]]
 
 * SSA backend
 
 - All backends updated to use the new SSA form. Old "plan9" style compiler backend deleted.
-- Big performance improvements for arm32.
-- Easy to add new SSA backends (for values of easy compilier engineers work in).
+- Generates more compact and efficient code
+- Better platform for optimizations
+- Big performance improvements for arm32 (20-30% speed up).
+- For others where SSA already used, 0-10% performance gain
 
 * New parser
-
-Robert Griesemer and Matthew Dempsky replaced the parser. TODO LINK TO CHANGE
 
 The new parser removes many of the package level variables which came along for the ride from the previous YACC based parser. Removing package level globals is a stepping stone to making the compiler more parallel.
 
@@ -94,17 +136,7 @@ Expect this AST conversion to be removed in Go 1.9.
 
 About a 12-15% improvement compared to Go 1.7
 
-TODO NEED GRAPHS
-
-* Mutex contention profile
-
-Peter Wienberger has added a new pprof profile, mutex contention.
-
-TODO NEEDS EXAMPLE
-
-_note_: do to an oversight this only works with `sync.Mutex`, not `sync.RWMutex`, this oversight will be addressed early in Go 1.9.
-
-TODO LINK TO ISSUE ABOUT RWMUTEX
+* Tools
 
 * Tools
 
@@ -117,7 +149,8 @@ TODO LINK TO ISSUE ABOUT RWMUTEX
 
 The new `go`bug` command starts a bug report on GitHub, prefilled with information about the current system.
 
-[[https://github.com/davecheney/go-1.8-release-party/issues/4][TODO NEEDS EXAMPLE]]
+: Starts a GitHub issue with env vars, platform, etc.
+.play examples/bug.go
 
 * go fix
 
@@ -126,6 +159,14 @@ The new `go`bug` command starts a bug report on GitHub, prefilled with informati
 * go vet - repeated struct tags and multiple struct tags
 
 .code examples/vet_repeated_json_tags.go
+
+* Mutex contention profile
+
+Peter Wienberger has added a new pprof profile, mutex contention.
+
+.code examples/mutex_profiling.go
+
+_note_: due to an oversight this only works with `sync.Mutex`, not `sync.RWMutex`, this oversight will be addressed early in Go 1.9.
 
 * Plugins
 
@@ -139,6 +180,8 @@ Then to build plugin.so
 
  $ go build -buildmode=plugin plugin.go
 
+: Only works with Linux for now
+
 * Plugin Example - Using Plugin
 .code examples/plugins/main.go  /START OMIT/,/END OMIT/
 
@@ -147,9 +190,13 @@ Then to build plugin.so
  Plugin loading
  Hello, number 7
 
-* What's coming up in Go 1.9
+* Plugin Example - Code Hot Loading
+.link https://github.com/campoy/golang-plugins
 
-Before we close, let's quickly touch on some of the things coming up in Go 1.9
+* And more
+TODO: LINK
+
+* What's coming up in Go 1.9
 
 _note_: All of these are speculation, nothing is set in stone until code hits the repo.
 
@@ -169,9 +216,6 @@ There is a CL ready to land that reduces it to 20 us per proc (thread servicing 
 
 .link https://golang.org/issue/13613
 
-TODO LINK TO CL
-
-
 * New calling convention
 
 On [[https://changelog.com/gotime/27][GoTime episode 27]], Keith Randall hinted that Go may change its calling convention.
@@ -180,7 +224,7 @@ The current Go calling convention passes all parameters and results on the stack
 
 This makes things like the scheduler and the garbage collector simpler, as you know when you enter a function, no registers are live or contain pointers.
 
-Most other languages pass some or all of their arguments in registers, and Keith thinks there is possibly a 10% speedup in changing the calling convetion.
+Most other languages pass some or all of their arguments in registers, and Keith thinks there is possibly a 10% speedup in changing the calling convention.
 
 Changing the calling convention would affect all the assembly code written. One solution would be to have the assember/compiler/go tool ? generate studs to convert between new and old calling conventions for 
 
