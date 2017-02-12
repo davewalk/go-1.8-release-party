@@ -265,6 +265,13 @@ http://beta.golang.org/pkg/os/#Executable
 ARE THERE OTHER UPCOMING 1.9 FEATURES TO BE AWARE OF
 
 * Conclusion
+- Faster gc, compilation, etc.
+- Plugins
+- Struct conversion
+- Easier sorting
+- `http.Shutdown`
+- Mutex contention profiler
+- Other small tool updates
 
 Upgrade to Go 1.8, now! 
 
