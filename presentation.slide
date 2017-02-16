@@ -24,11 +24,11 @@ Some details also taken from Francesc Campoy's [[https://talks.golang.org/2017/s
 
 * Go 1.8
 
-Go 1.8 _is_/_was_ released on the Nth of February. 
+Go 1.8 was released on the 16th of February. 
 
 Go 1.8 is the 9th release in the Go 1 series. It follows from the previous version, Go 1.7, [[https://blog.golang.org/go1.7][released on the 16th of August, 2016]]
 
-TODO LINK TO RELEASE NOTES AND BLOG POST ANNOUNCEMENT
+.link https://blog.golang.org/go1.8
 
 * Topics
 - Language Addition and Updates
@@ -61,11 +61,19 @@ There are also new `slice.SliceTable` and `slice.SliceIsSorted` functions.
 *Is* a bit slower than the regular way to sort
 
 * HTTP Shutdown
-New `Shutdown()` method to `http.Server`
+New `Shutdown()` method to `http.Server` gracefully shuts down the server without interrupting any active connections
 
 .code examples/server_shutdown.go
 
 .code examples/server_shutdown_examine.go
+
+* More Context Support
+
+Continuing Go 1.7's adoption of `context.Context` into the standard library, Go 1.8 adds more context support to existing packages:
+
+- The new `Server.Shutdown` takes a context argument.
+- There have been significant additions to the `database/sql` package with context support.
+- All nine of the new `Lookup` methods on the new `net.Resolver` now take a context.
 
 * Performance
 
@@ -95,10 +103,6 @@ The overhead of deferred function calls has been reduced by about half.
 
 The overhead of calls from Go into C has been reduced by about half.
 
-* OSX support 
-
-- Go 1.8 now only supports OS X 10.8 or later. This is likely the last Go release to support 10.8. Compiling Go or running binaries on older OS X versions is untested.
-
 * Compiler speed
 
 About a 12-15% improvement compared to Go 1.7
@@ -119,7 +123,6 @@ When `GOPATH` is not defined, the tool will use:
 * Tools
 
 - The yacc tool (previously available by running “go tool yacc”) has been removed. As of Go 1.7 it was no longer used by the Go compiler. It has moved to the “tools” repository and is now available at golang.org/x/tools/cmd/goyacc.
-- `go`tool`asm` now supports a flotilla of Intel and PPC vector instructions. [[https://beta.golang.org/doc/go1.8#cmd_asm][Consult the release notes for the specifics]].
 - The trace tool has a new -pprof flag for producing pprof-compatible blocking and latency profiles from an execution trace. Garbage collection events are now shown more clearly in the execution trace viewer. Garbage collection activity is shown on its own row and GC helper goroutines are annotated with their roles.
 - Vet is stricter in some ways and looser where it previously caused false positives. Vet now checks for copying an array of locks, duplicate JSON and XML struct field tags, non-space-separated struct tags, deferred calls to HTTP Response.Body.Close before checking errors, and indexed arguments in Printf. It also improves existing checks.
 
@@ -132,10 +135,6 @@ The new `go`bug` command starts a bug report on GitHub, prefilled with informati
 * go fix
 
 `go`fix` now rewrites references to `golang.org/x/net/context` to the standard library provided `context` package.
-
-* go vet - repeated struct tags and multiple struct tags
-
-.code examples/vet_repeated_json_tags.go
 
 * Mutex contention profile
 
@@ -153,7 +152,7 @@ Go now supports a “plugin” build mode for generating plugins written in Go, 
 
 .code examples/plugins/plugin.go
 
-Then to build plugin.so
+Then to build `plugin.so`
 
  $ go build -buildmode=plugin plugin.go
 
@@ -169,7 +168,7 @@ Then to build plugin.so
 .link https://github.com/campoy/golang-plugins
 
 * And more
-TODO: LINK
+.link https://golang.org/doc/go1.8 
 
 * What's coming up in Go 1.9
 
@@ -201,12 +200,6 @@ This makes things like the scheduler and the garbage collector simpler, as you k
 Most other languages pass some or all of their arguments in registers, and Keith thinks there is possibly a 10% speedup in changing the calling convention.
 
 Changing the calling convention would affect all the assembly code written. One solution would be to have the assember/compiler/go tool ? generate studs to convert between new and old calling conventions for 
-
-* Improvements to the inliner
-
-Inlining has historically been limited to leaf functions because of the concern of agressive inlining on the call graph.
-
-In support of this Robert Griesemer and Matthew Dempsky have been improving the line number tracking in Go 1.9 to make it flexible enough to lift the restriction on non-leaf functions.
 
 * Official dependency management tool
 
