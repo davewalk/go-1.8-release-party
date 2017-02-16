@@ -63,8 +63,6 @@ There are also new `slice.SliceTable` and `slice.SliceIsSorted` functions.
 * HTTP Shutdown
 New `Shutdown()` method to `http.Server`
 
-: "lame duck mode" - don't serve new requests, but won't die for already established requests
-
 .code examples/server_shutdown.go
 
 .code examples/server_shutdown_examine.go
@@ -129,7 +127,6 @@ When `GOPATH` is not defined, the tool will use:
 
 The new `go`bug` command starts a bug report on GitHub, prefilled with information about the current system.
 
-: Starts a GitHub issue with env vars, platform, etc.
 .play examples/bug.go
 
 * go fix
@@ -159,8 +156,6 @@ Go now supports a “plugin” build mode for generating plugins written in Go, 
 Then to build plugin.so
 
  $ go build -buildmode=plugin plugin.go
-
-: Only works with Linux for now
 
 * Plugin Example - Using Plugin
 .code examples/plugins/main.go  /START OMIT/,/END OMIT/
